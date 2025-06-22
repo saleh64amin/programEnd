@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة مؤشر كتلة الجسم (BMI)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input {
+            padding: 8px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .bmi-info {
+            margin-top: 30px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>حاسبة مؤشر كتلة الجسم (BMI)</h1>
+        
+        <label for="weight">الوزن (كجم):</label>
+        <input type="number" id="weight" placeholder="أدخل الوزن بالكيلوجرام">
+        
+        <label for="height">الطول (سم):</label>
+        <input type="number" id="height" placeholder="أدخل الطول بالسنتيمتر">
+        
+        <button onclick="calculateBMI()">احسب BMI</button>
+        
+        <div id="result"></div>
+    </div>
+    
+    <div class="bmi-info">
+        <h3>تفسير نتائج مؤشر كتلة الجسم:</h3>
+        <p>أقل من 18.5: نقص في الوزن</p>
+        <p>18.5 - 24.9: وزن طبيعي</p>
+        <p>25 - 29.9: زيادة في الوزن</p>
+        <p>30 أو أكثر: سمنة</p>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            // الحصول على القيم من حقول الإدخال
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            
+            // التحقق من صحة المدخلات
+            if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
+                document.getElementById('result').innerHTML = "الرجاء إدخال قيم صحيحة للوزن والطول";
+                return;
+            }
+            
+            // تحويل الطول من سم إلى متر
+            const heightInMeters = height / 100;
+            
+            // حساب مؤشر كتلة الجسم
+            const bmi = weight / (heightInMeters * heightInMeters);
+            
+            // تقريب النتيجة إلى منزلتين عشريتين
+            const roundedBMI = bmi.toFixed(2);
+            
+            // تحديد حالة الوزن
+            let status = "";
+            if (bmi < 18.5) {
+                status = "نقص في الوزن";
+            } else if (bmi >= 18.5 && bmi < 25) {
+                status = "وزن طبيعي";
+            } else if (bmi >= 25 && bmi < 30) {
+                status = "زيادة في الوزن";
+            } else {
+                status = "سمنة";
+            }
+            
+            // عرض النتيجة
+            document.getElementById('result').innerHTML = 
+                `مؤشر كتلة الجسم (BMI) الخاص بك هو: <span style="color: #4CAF50;">${roundedBMI}</span><br>الحالة: ${status}`;
+        }
+    </script>
+</body>
+</html>

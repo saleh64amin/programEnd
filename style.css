@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background-color: #f0f7ff;
     margin: 0;
     padding: 0;
     display: flex;
@@ -27,7 +27,7 @@ body {
   
   h1 {
     text-align: center;
-    color: #333;
+    color: #34495e;
   }
   
   form .form-group {
@@ -43,7 +43,7 @@ body {
   form input, form select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #b2bec3;
     border-radius: 5px;
     font-size: 14px;
   }
@@ -51,7 +51,7 @@ body {
   button.calculate-btn {
     width: 100%;
     padding: 10px;
-    background-color: #940ae4;
+    background-color: #6C5CE7;
     color: white;
     border: none;
     border-radius: 5px;
@@ -60,13 +60,13 @@ body {
   }
   
   button.calculate-btn:hover {
-    background-color: #c300ff;
+    background-color: #5E4BDF;
   }
   
   #results {
     margin-top: 20px;
     text-align: center;
-    border: solid 1px rgb(200, 255, 0);
+    border: solid 1px #6C5CE7;
   }
   .amiri-regular {
     font-family: "Amiri", serif;

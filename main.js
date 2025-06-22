@@ -7,9 +7,11 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
     let age = parseFloat(document.getElementById('age').value);
     const gender = document.getElementById('gender').value;
     const activityLevel = parseFloat(document.getElementById('activity-level').value);
-
+    document.getElementById("power").innerHTML = `${activityLevel} النشاط: `;
+    const name = document.getElementById("name").value;
     let height1 = height
-
+const pn = document.getElementById("pn").value;
+document.getElementById("pnn").innerHTML = ` ${pn}  سعرات فرق  `;
     console.log("الطول" + height1);
 
 
@@ -54,15 +56,87 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
 
 
 
+  // الحصول على القيم من المدخلات
+                 
+                    
+                    
+                    
+                    
+const heightInMeters = height / 100;
+const bmi = weight / (heightInMeters * heightInMeters);
+const roundedBMI = bmi.toFixed(2);
 
+// حساب الوزن المثالي (للبالغين والحوامل فقط)
+let idealWeightInfo = "";
+if (gender === 'male' || gender === 'female' || gender.startsWith('brgnet')) {
+    idealWeight = gender === 'male' 
+        ? 50 + 0.91 * (height - 152.4) 
+        : 45.5 + 0.91 * (height - 152.4);
+    
+    const lowerRange = (idealWeight * 0.9).toFixed(1);
+    const upperRange = (idealWeight * 1.1).toFixed(1);
+    idealWeightInfo = ` كجم ${idealWeight.toFixed(1)} المثالي الوزن  
+    كجم   ${lowerRange}  ${upperRange} الصحي المدى`;
 
+    
+} else if (gender.startsWith('bebe')) {
+    // لا يتم حساب الوزن المثالي للأطفال
+    idealWeightInfo = "";
+}
 
+// تحديد حالة الوزن (لا ينطبق على الرضع)
+let status = "";
+if (gender.startsWith('bebe')) {
+    status = " للرضع لا ";
+} else {
+    if (bmi < 18.5) status = "الوزن نقص ";
+    else if (bmi < 25) status = "طبيعي وزن ";
+    else if (bmi < 30) status = "الوزن زيادة  ";
+    else status = "سمنة";
+}
 
+// عرض النتائج حسب الفئة
+if (gender === 'male' || gender === 'female' || gender.startsWith('brgnet')) {
+    document.getElementById('bmi').innerHTML = 
+        ` ${roundedBMI} (BMI) <br> ${status} الحالة  `;
+    document.getElementById('ideal-weight').textContent = idealWeightInfo;
+}
+else if (gender.startsWith('bebe')) {
+    // لا يتم عرض أي رسالة لمؤشر كتلة الجسم أو الوزن المثالي للأطفال
+    document.getElementById('bmi').innerHTML = "BMI 0";
+    document.getElementById('ideal-weight').textContent = "0 مثالي  وزن";
+}
+// const heightInMeters = height / 100;
+            
+// // حساب مؤشر كتلة الجسم
+// const bmi = weight / (heightInMeters * heightInMeters);
+            
+// // تقريب النتيجة إلى منزلتين عشريتين
+// const roundedBMI = bmi.toFixed(2);
+            
+// // الحصول على قيمة الجنس
 
-
-
-
-
+// // التحقق من أن الجنس Male أو Female فقط
+// if (gender === "male" || gender === "female") {
+//     // تحديد حالة الوزن
+//     let status = "";
+//     if (bmi < 18.5) {
+//         status = "نقص في الوزن";
+//     } else if (bmi >= 18.5 && bmi < 25) {
+//         status = "وزن طبيعي";
+//     } else if (bmi >= 25 && bmi < 30) {
+//         status = "زيادة في الوزن";
+//     } else {
+//         status = "سمنة";
+//     }
+    
+//     // عرض النتيجة فقط إذا كان الجنس Male أو Female
+//     document.getElementById('bmi').innerHTML = 
+//         `مؤشر كتلة الجسم (BMI) الخاص بك هو: <span style="color: #4CAF50;">${roundedBMI}</span><br>الحالة: ${status}`;
+// } else if{
+//     // لا تعرض أي شيء إذا لم يكن Male أو Female
+//     document.getElementById('bmi').innerHTML = "";
+// }
 
 
 
@@ -105,44 +179,40 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
     // bmr * activityLevel
 
 
+    const pnValue = parseFloat(pn); // Convert pn to a number
+
     if (gender === 'male') {
-        tdee = bmr * activityLevel;
+        tdee = bmr * activityLevel + pnValue;
     } else if (gender === 'female') {
-        tdee = bmr * activityLevel
+        tdee = bmr * activityLevel + pnValue;
     }
-
-
 
     if (gender === 'brgnet1') {
-        tdee = bmr * activityLevel + 50;
+        tdee = bmr * activityLevel + 50 + pnValue;
     } else if (gender === "brgnet2") {
-        tdee = bmr * activityLevel + 250;
+        tdee = bmr * activityLevel + 250 + pnValue;
     } else if (gender === "brgnet3") {
-        tdee = bmr * activityLevel + 450;
+        tdee = bmr * activityLevel + 450 + pnValue;
     } else if (gender === "mama") {
-        tdee = bmr * activityLevel + 500;
-    }
-    else if (gender === "bebe1-3") {
-        tdee = bmr;
-    }
-    else if (gender === "bebe4-5") {
-        tdee = bmr;
-    }
-    else if (gender === "bebe6-8") {
-        tdee = bmr;
-    }
-    else if (gender === "bebe6-8!") {
-        tdee = bmr;
-    }
-    else if (gender === "bebe9-18") {
-        tdee = bmr;
+        tdee = bmr * activityLevel + 500 + pnValue;
+    } else if (gender === "bebe1-3") {
+        tdee = bmr + pnValue;
+    } else if (gender === "bebe4-5") {
+        tdee = bmr + pnValue;
+    } else if (gender === "bebe6-8") {
+        tdee = bmr + pnValue;
+    } else if (gender === "bebe6-8!") {
+        tdee = bmr + pnValue;
+    } else if (gender === "bebe9-18") {
+        tdee = bmr + pnValue;
     } else if (gender === "bebe9-18!") {
-        tdee = bmr;
+        tdee = bmr + pnValue;
     }
     const proteinInput = parseFloat(document.getElementById('protein-input').value);
     const fatInput = parseFloat(document.getElementById('fat-input').value);
     // const carbsInput = parseFloat(document.getElementById('carbs-input').value);
-
+document.getElementById("fatandproteinInput").innerHTML = ` ${fatInput} الدهون توزيع
+ ${proteinInput} البروتين توزيع  `; 
     // توزيع الماكروز
     let proteinCalories = 0; // 30% للبروتين
 
@@ -150,7 +220,7 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
     if (gender === "male" || gender === "female" || gender === "bebe1-3" || gender === "bebe4-5" || gender === "bebe6-8" || gender === "bebe6-8!" || gender === "bebe9-18" || gender === "bebe9-18!") {
         proteinCalories = tdee * proteinInput; // حساب السعرات الحرارية للبروتين
     } else {
-        proteinCalories = weight * proteinInput * 4; // حساب السعرات الحرارية للبروتين
+        proteinCalories = idealWeight * proteinInput * 4; // حساب السعرات الحرارية للبروتين
     }
 
     // console.log("proteinGrams:", proteinGrams);
@@ -197,9 +267,7 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
     // عرض النتائج
     document.getElementById('calories-result').textContent = `احتياجك اليومي: ${Math.round(tdee)} سعر حراري.`;
     document.getElementById('macros-result').textContent =
-        `البروتين: ${Math.round(proteinGrams)} جم، الدهون: ${Math.round(fatGrams)} جم، الكربوهيدرات: ${Math.round(carbGrams)} جم.`;
-
-
+        `  البروتين: ${Math.round(proteinGrams)} جم، الدهون: ${Math.round(fatGrams)} جم، الكربوهيدرات: ${Math.round(carbGrams)} جم.`;
 
 
     function distributeExchanges(carbs, protein, fats) {
@@ -207,8 +275,8 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
         const dairy = { carbs: 12, protein: 8, fats: 0 };
         const vegetables = { carbs: 5, protein: 2, fats: 0 };
         const bread = { carbs: 15, protein: 2, fats: 0 };
-        const fruits = { carbs: 15, protein: 0, fats: 0 };
-        const meat = { carbs: 0, protein: 7, fats: 3 };
+        const fruits = { carbs: 10, protein: 0, fats: 0 };
+        const meat = { carbs: 0, protein: 5, fats: 3 };
         const fatsGroup = { carbs: 0, protein: 0, fats: 5 };
 
 
@@ -293,94 +361,58 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
     document.getElementById("ss").innerHTML = ` الوزن المثالي: ${idealWeight} `
     document.getElementById("bdel").innerHTML = ` الألبان: ${results.dairy} حصص` + " " + ` الخضراوات: ${results.vegetables} حصص` + " " + ` الخبز: ${results.bread} حصص` + " " + ` الفاكهة: ${results.fruits} حصص` + " " + ` اللحوم: ${results.meat} حصص` + " " + ` الدهون: ${results.fats} حصص`
     const numfood = parseFloat(document.getElementById('numfood').value);
-
+    document.getElementById("meal3").innerHTML = ` ${numfood} : الوجبات  عدد  `
     const dairy = document.getElementById("dairy")
     dairy.innerHTML = "حصص الألبان:" +
-        `<br>زبادي: ${(results.dairy * 240 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.dairy * 1 * 1 / numfood).toFixed(1)}كوب ` +
+        // `<br>زبادي: ${(results.dairy * 240 * 1 / numfood).toFixed(1)}   جرام  ` +
+        `<br>زبادي: ${(results.dairy * 1 * 1 / numfood).toFixed(1)}  كوب  ` +
 
-        `<br>اللبن: ${(results.dairy * 240 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.dairy * 1 * 1 / numfood).toFixed(1)}   كوب  `
+        // `<br>اللبن: ${(results.dairy * 240 * 1 / numfood).toFixed(1)}   جرام  ` +
+        `<br>حليب: ${(results.dairy * 1 * 1 / numfood).toFixed(1)}   كوب  `
         +
-        `<br> لبن رايب : ${(results.dairy * 240 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.dairy * 1 * 1 / numfood).toFixed(1)}كوب `
-
-        +
-        `<br> لبن جاف: ${(results.dairy * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.dairy * 0.33 * 1 / numfood).toFixed(1)}كوب `
-
-    const fruits = document.getElementById("fruits")
-    fruits.innerHTML = "حصص الفاكهة:" +
-        `<br> تمر: ${(results.fruits * 60 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 3 * 1 / numfood).toFixed(1)}حبة `
+        // `<br> لبن رايب : ${(results.dairy * 240 * 1 / numfood).toFixed(1)}   جرام  ` +
+        `<br>اللبن رايب: ${(results.dairy * 1 * 1 / numfood).toFixed(1)} كوب `
 
         +
-        `<br> تفاح كبيرة: ${(results.fruits * 250 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 1 * 1 / numfood).toFixed(1)}حبة `
+        // `<br> لبن جاف: ${(results.dairy * 16 * 1 / numfood).toFixed(1)}   جرام  ` +
+        `<br>لبن جاف : ${(results.dairy * 0.33 * 1 / numfood).toFixed(1)} كوب `
 
-        +
-        `<br> مشمش متوسطة: : ${(results.fruits * 140 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 4 * 1 / numfood).toFixed(1)}حبة `
-
-        +
-        `<br> عنب صغيرة : ${(results.fruits * 75 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 15 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br>  موزة متوسطة: ${(results.fruits * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 1 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> شمام : ${(results.fruits * 300 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.33 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> كرز : ${(results.fruits * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 12 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> تين : ${(results.fruits * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 2 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br>  جريب فروت : ${(results.fruits * 175 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> كيوي : ${(results.fruits * 100 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 1 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> مانجو : ${(results.fruits * 125 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> خوخ متوسطة : ${(results.fruits * 150 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 1 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> كمثرى متوسطة : ${(results.fruits * 175 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 1 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> اناناس : ${(results.fruits * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.75 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> رمان : ${(results.fruits * 90 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> فراولة : ${(results.fruits * 75 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> مشمش معلب : ${(results.fruits * 70 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 4 * 1 / numfood).toFixed(1)}انصاف ` +
-        `<br>   كرز معلب: ${(results.fruits * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> فواكه مشكلة معلبة : ${(results.fruits * 125 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> أناناس معلب : ${(results.fruits * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.33 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> تفاح مجفف : ${(results.fruits * 25 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 4 * 1 / numfood).toFixed(1)}حلقات ` +
-        `<br>  مشمش مجفف: ${(results.fruits * 50 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 6 * 1 / numfood).toFixed(1)}حلقات ` +
-        `<br> تين مجفف : ${(results.fruits * 55 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 1.5 * 1 / numfood).toFixed(1)}حبة ` +
-        `<br> زبيب : ${(results.fruits * 20 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 2 * 1 / numfood).toFixed(1)}ملعقة طعام ` +
-        `<br> عصير تفاح : ${(results.fruits * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> عصير جريب فروت : ${(results.fruits * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> عصير برتقال : ${(results.fruits * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> عصير اناناس : ${(results.fruits * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> عصير عنب : ${(results.fruits * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.33 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> عصير توت بري : ${(results.fruits * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fruits * 0.33 * 1 / numfood).toFixed(1)}كوب `
-
-
-
-
-
-
-
-
-
-
-
-    const vegetables = document.getElementById("vegetables");
-    vegetables.innerHTML = " حصص الخضار:" + "كوب  نيء او نصف كوب مطهي" +
-        `<br>  خضار مشكل: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي `
-
-        +
-        `<br> الفاصوليا: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي `
-        +
-        `<br> القرع: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> الكرنب: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> الملفوف: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> الكوسا: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br>البنجر : ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br>الجزر : ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> زهرة القرنبيط: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> البروكلي: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> باذنجان: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> الكراث: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> الفطر: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> البامية: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> البصل: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> بازلاء: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> الفلفل: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> السبانخ: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> الملوخية: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br> الطماطم: ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        `<br>اللفت : ${(results.vegetables * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي ` +
-        "<br>الخضراوات التالية غير محسوبة " + "<br> بقدونس -خس-كرفس-خيار-بصل اخضر-فلفل حار-فجل "
+        const fruits = document.getElementById("fruits");
+        fruits.innerHTML = "حصص الفاكهة:" +
+            `<br>تمر: ${(results.fruits * 3 / numfood).toFixed(1)} حبة` +
+            `<br>تفاح: ${(results.fruits * 1 / numfood).toFixed(1)} حبة` +
+            `<br>مشمش متوسط: ${(results.fruits * 4 / numfood).toFixed(1)} حبة` +
+            `<br>عنب صغير: ${(results.fruits * 15 / numfood).toFixed(1)} حبة` +
+            `<br>موز متوسط: ${(results.fruits * 1 / numfood).toFixed(1)} حبة` +
+            `<br>شمام: ${(results.fruits * 0.33 / numfood).toFixed(2)} حبة` +
+            `<br>كرز: ${(results.fruits * 12 / numfood).toFixed(1)} حبة` +
+            `<br>تين: ${(results.fruits * 2 / numfood).toFixed(1)} حبة` +
+            `<br>جريب فروت: ${(results.fruits * 0.5 / numfood).toFixed(1)} حبة` +
+            `<br>يوسفي: ${(results.fruits * 2 / numfood).toFixed(1)} حبة` +
+            `<br>برتقال: ${(results.fruits * 1 / numfood).toFixed(1)} حبة` +
+            `<br>جوافة: ${(results.fruits * 2 / numfood).toFixed(1)} حبة صغيرة` +
+            `<br>بطيخ: ${(results.fruits * 1.25 / numfood).toFixed(2)} كوب` +
+            `<br>كيوي: ${(results.fruits * 1 / numfood).toFixed(1)} حبة` +
+            `<br>مانجو: ${(results.fruits * 0.5 / numfood).toFixed(1)} حبة` +
+            `<br>خوخ متوسط: ${(results.fruits * 1 / numfood).toFixed(1)} حبة` +
+            `<br>كمثرى متوسطة: ${(results.fruits * 1 / numfood).toFixed(1)} حبة` +
+            `<br>أناناس: ${(results.fruits * 0.75 / numfood).toFixed(2)} كوب` +
+            `<br>رمان: ${(results.fruits * 0.5 / numfood).toFixed(2)} كوب` +
+            `<br>فراولة: ${(results.fruits * 1.25 / numfood).toFixed(2)} كوب` +
+            `<br>مشمش معلب: ${(results.fruits * 4 / numfood).toFixed(1)} أنصاف` +
+            `<br>كرز معلب: ${(results.fruits * 0.5 / numfood).toFixed(2)} كوب` +
+            `<br>فواكه مشكلة معلبة: ${(results.fruits * 0.5 / numfood).toFixed(2)} كوب` +
+            `<br>أناناس معلب: ${(results.fruits * 0.33 / numfood).toFixed(2)} كوب` +
+            `<br>تفاح مجفف: ${(results.fruits * 4 / numfood).toFixed(1)} حلقات` +
+            `<br>مشمش مجفف: ${(results.fruits * 6 / numfood).toFixed(1)} حلقات` +
+            `<br>تين مجفف: ${(results.fruits * 1.5 / numfood).toFixed(1)} حبة` +
+            `<br>زبيب: ${(results.fruits * 2 / numfood).toFixed(1)} ملعقة طعام` +
+            `<br>عصير تفاح: ${(results.fruits * 0.5 / numfood).toFixed(2)} كوب` +
+            `<br>عصير جريب فروت: ${(results.fruits * 0.5 / numfood).toFixed(2)} كوب` +
+            `<br>عصير برتقال: ${(results.fruits * 0.5 / numfood).toFixed(2)} كوب` +
+            `<br>عصير أناناس: ${(results.fruits * 0.5 / numfood).toFixed(2)} كوب` +
+            `<br>عصير عنب: ${(results.fruits * 0.33 / numfood).toFixed(2)} كوب` +
+            `<br>عصير توت بري: ${(results.fruits * 0.33 / numfood).toFixed(2)} كوب`;
 
 
 
@@ -391,67 +423,34 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
 
 
 
-
-
-
-
-
-
-    const bread = document.getElementById("bread");
-    bread.innerHTML = " حصص خبز:" +
-        `<br> شوفان او جريش او سميد او برغل: ${(results.bread * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> معكرونة  : ${(results.bread * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 0.5 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br> ارز ابيض او اسمر: ${(results.bread * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 0.33 * 1 / numfood).toFixed(1)}كوب مطهي` +
-        `<br> كسكسي: ${(results.bread * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 0.33 * 1 / numfood).toFixed(1)}كوب مطهي` +
-        `<br> خبز: ${(results.bread * 30 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 0.33 * 1 / numfood).toFixed(1)}رغيف ` +
-        `<br> توست: ${(results.bread * 30 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 1 * 1 / numfood).toFixed(1)} شريحة` +
-        `<br> ذرة: ${(results.bread * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي` +
-        `<br> فشار: ${(results.bread * 720 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 3 * 1 / numfood).toFixed(1)} كوب مطهي بالميكرويف` +
-        `<br> كورن فليكس: ${(results.bread * 180 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 0.75 * 1 / numfood).toFixed(1)}كوب ` +
-        `<br>بطاطس : ${(results.bread * 120 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 0.5 * 1 / numfood).toFixed(1)}كوب مطهي` +
-        `<br> بسكوت نخالة: ${(results.bread * 40 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.bread * 1 * 1 / numfood).toFixed(1)}حبة `
-
-
-
-    const meat = document.getElementById("meat")
-    meat.innerHTML = "حصص لحوم:" +
-        `<br> تونة او سالمون: ${(results.meat * 60 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 6 * 1 / numfood).toFixed(1)}ملعقة ` +
-        `<br>  سردين بدون زيت : ${(results.meat * 170 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 3 * 1 / numfood).toFixed(1)}حبة متوسطة ` +
-        `<br>   جمبري او سبيط (كالماري): ${(results.meat * 170 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 5 * 1 / numfood).toFixed(1)}قطعة متوسطة ` +
-
-        `<br>    سمك دهني : ${(results.meat * 30 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 1 * 1 / numfood).toFixed(1)} قطعة `
-        +
-        `<br>   لحم احمر  : ${(results.meat * 30 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 1 * 1 / numfood).toFixed(1)} قطعة ` +
-        `<br>    لحم ابيض (دواجن) : ${(results.meat * 30 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 1 * 1 / numfood).toFixed(1)} قطعة ` +
-        `<br>   كبدة بانواعها  : ${(results.meat * 25 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 1 * 1 / numfood).toFixed(1)} قطعة ` +
-        `<br>   عدس  : ${(results.meat * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 0.33 * 1 / numfood).toFixed(1)} كوب مطهي ` +
-        `<br>    لوبيا : ${(results.meat * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 0.33 * 1 / numfood).toFixed(1)} كوب مطهي ` +
-        `<br>    فول : ${(results.meat * 60 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 0.25 * 1 / numfood).toFixed(1)} كوب مطهي ` +
-        `<br>    فاصوليا  : ${(results.meat * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 0.33 * 1 / numfood).toFixed(1)} كوب مطهي ` +
-        `<br>   جبن قليل الدسم  : ${(results.meat * 60 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 0.25 * 1 / numfood).toFixed(1)}  قطعة ` +
-        `<br>   مثلث جبن قليل الدسم  : ${(results.meat * 18 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 1 * 1 / numfood).toFixed(1)} حبه  ` +
-        `<br>   بارميزان  : ${(results.meat * 20 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 2 * 1 / numfood).toFixed(1)}  ملعقة طعام ` +
-        `<br>   جبن قريش  : ${(results.meat * 80 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 0.25 * 1 / numfood).toFixed(1)}  قطعة ` +
-        `<br>    جبن حلوم قليل الدسم : ${(results.meat * 60 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 0.25 * 1 / numfood).toFixed(1)}  قطعة ` +
-        `<br>    لبنة قليل الدسم : ${(results.meat * 20 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 2 * 1 / numfood).toFixed(1)}  ملعقة طعام ` +
-        `<br>   بيضة  : ${(results.meat * 60 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 1 * 1 / numfood).toFixed(1)}  حبة ` +
-        `<br>    بياض بيضتين : ${(results.meat * 60 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.meat * 1 * 1 / numfood).toFixed(1)}  واحد `
-
-    const fats = document.getElementById("fats")
-    fats.innerHTML = "حصص الدهون:" +
-        `<br> زيت زيتون: ${(results.fats * 5 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 1 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> زيت عباد شمس : ${(results.fats * 5 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 1 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> زبده او سمنه : ${(results.fats * 5 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 1 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> سمسم: ${(results.fats * 10 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 2 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> طحينه السمسم: ${(results.fats * 10 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 2 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> زيتون: ${(results.fats * 35 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 8 * 1 / numfood).toFixed(1)}  حبه` +
-        `<br> مكسرات (لوز او كاجو): ${(results.fats * 8 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 6 * 1 / numfood).toFixed(1)} حبه ` +
-        `<br> فول سوداني: ${(results.fats * 7 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 10 * 1 / numfood).toFixed(1)} حبه ` +
-        `<br> زبدةالفول السوداني: ${(results.fats * 5 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 1 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> مايونيز لايت: ${(results.fats * 5 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 1 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> قشطة: ${(results.fats * 5 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 1 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> تتبيلة السلطة: ${(results.fats * 5 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 1 * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
-        `<br> زيت جوز هند: ${(results.fats * 10 * 1 / numfood).toFixed(1)}   جرام  ` + `<br> ${(results.fats * 2 * 1 / numfood).toFixed(1)} ملعقة صغيرة`
+        const vegetables = document.getElementById("vegetables");
+        vegetables.innerHTML = `
+            حصص الخضار: كوب نيء أو نصف كوب مطهي
+            <br> خضار مشكل: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الفاصوليا: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> القرع: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الكرنب: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الملفوف: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الكوسا: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> البنجر: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الجزر: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> زهرة القرنبيط: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> البروكلي: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> باذنجان: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الكراث: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الفطر: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> البامية: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> البصل: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> بازلاء: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الفلفل: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> السبانخ: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الملوخية: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الطماطم: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> اللفت: ${(results.vegetables * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي
+            <br> الخضراوات التالية غير محسوبة: 
+            <br> بقدونس - خس - كرفس - خيار - بصل أخضر - فلفل - فجل
+        `;
+        
 
 
 
@@ -460,57 +459,113 @@ document.getElementById('calorie-form').addEventListener('submit', function (e) 
 
 
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const printButton = document.getElementById("printButton");
-          
-            if (printButton) {
-              printButton.addEventListener("click", function () {
-                // Get the current text content of each section
-                const dairyText = document.getElementById("dairy").innerText;
-                const fruitsText = document.getElementById("fruits").innerText;
-                const vegetablesText = document.getElementById("vegetables").innerText;
-                const breadText = document.getElementById("bread").innerText;
-                const meatText = document.getElementById("meat").innerText;
-                const fatsText = document.getElementById("fats").innerText;
 
-                // Check if pdfMake is available
-                if (typeof pdfMake === 'undefined') {
-                  alert('PDF printing library is not loaded. Please check your internet connection or page setup.');
-                  return;
-                }
 
-                const docDefinition = {
-                  content: [
-                    { text: "قائمة المشتريات", style: "header" },
-                    { text: dairyText, style: "section" },
-                    { text: fruitsText, style: "section" },
-                    { text: vegetablesText, style: "section" },
-                    { text: breadText, style: "section" },
-                    { text: meatText, style: "section" },
-                    { text: fatsText, style: "section" },
-                  ],
-                  styles: {
-                    header: {
-                      fontSize: 20,
-                      bold: true,
-                      alignment: "center",
-                      margin: [0, 0, 0, 20]
-                    },
-                    section: {
-                      fontSize: 12,
-                      margin: [0, 5, 0, 5]
-                    }
-                  },
-                  defaultStyle: {
-                    font: "Cairo",
-                  },
-                };
-  
-                pdfMake.createPdf(docDefinition).download("قائمة.pdf");
-              });
-            }
-        });
-          
+
+
+
+        const bread = document.getElementById("bread");
+        bread.innerHTML = "حصص خبز:" +
+            `<br>شوفان أو جريش أو سميد أو برغل: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب` +
+            `<br>معكرونة: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب` +
+            `<br>أرز أبيض أو أسمر: ${(results.bread * 0.33 * 1 / numfood).toFixed(1)} كوب مطهي` +
+            `<br>كسكسي: ${(results.bread * 0.33 * 1 / numfood).toFixed(1)} كوب مطهي` +
+            `<br>خبز: ${(results.bread * 0.33 * 1 / numfood).toFixed(1)} رغيف` +
+            `<br>خبز: ${(results.bread * 30 * 1 / numfood).toFixed(1)} جرام` +
+
+            `<br>صامولي أو برجر: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} قطعة` +
+            `<br>توست: ${(results.bread * 1 * 1 / numfood).toFixed(1)} شريحة` +
+            `<br>ذرة: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي` +
+            `<br>فشار: ${(results.bread * 3 * 1 / numfood).toFixed(1)} كوب مطهي بالميكرويف` +
+            `<br> كورن فليكس كامل : ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب` +
+            `<br>بطاطس: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي` +
+            `<br>بسكوت: ${(results.bread * 4 * 1 / numfood).toFixed(1)} حبة` +
+            `<br>شابورة: ${(results.bread * 1.5 * 1 / numfood).toFixed(1)} حبة` +
+            `<br>عدس: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي` +
+            `<br>لوبيا: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي` +
+            `<br>فول: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي` +
+            `<br>فلافل: ${(results.bread *3* 1 / numfood).toFixed(1)} حبة متوسطة` +
+            `<br>فاصوليا: ${(results.bread * 0.5 * 1 / numfood).toFixed(1)} كوب مطهي`;
+        
+
+            const meat = document.getElementById("meat");
+            meat.innerHTML = "حصص لحوم:" +
+                `<br> تونة أو سالمون: ${(results.meat * 6 / numfood).toFixed(1)} ملعقة ` +
+                `<br> سردين بدون زيت: ${(results.meat * 3 / numfood).toFixed(1)} حبة متوسطة ` +
+                `<br> جمبري أو سبيط: ${(results.meat * 5 / numfood).toFixed(1)} قطعة متوسطة ` +
+                
+                `<br> سمك دهني: ${(results.meat * 30 / numfood).toFixed(1)} جرام ` +
+                `<br> سمك دهني: ${(results.meat * 1 / numfood).toFixed(1)} قطعة ` +
+            
+                `<br> لحم أحمر: ${(results.meat * 30 / numfood).toFixed(1)} جرام ` +
+                `<br> لحم أحمر: ${(results.meat * 1 / numfood).toFixed(1)} قطعة منزوع العظم ` +
+            
+                `<br> لحم أبيض دواجن ${(results.meat * 30 / numfood).toFixed(1)} جرام ` +
+                `<br> لحم أبيض دواجن: ${(results.meat * 1 / numfood).toFixed(1)} قطعة منزوع العظم ` +
+            
+                `<br> كبدة بأنواعها: ${(results.meat * 25 / numfood).toFixed(1)} جرام ` +
+                `<br> كبدة بأنواعها: ${(results.meat * 1 / numfood).toFixed(1)} قطعة ` +
+            
+                `<br> جبن قليل الدسم: ${(results.meat * 30 / numfood).toFixed(1)} جرام ` +
+                `<br> جبن قليل الدسم: ${(results.meat * 1 / numfood).toFixed(1)} قطعة ` +
+            
+                `<br> بارميزان: ${(results.meat * 2 / numfood).toFixed(1)} ملعقة طعام ` +
+            
+                `<br> جبن قريش: ${(results.meat * 0.25 / numfood).toFixed(1)} كوب ` +
+            
+                `<br> جبن حلوم قليل الدسم: ${(results.meat * 0.25 / numfood).toFixed(1)} قطعة ` +
+            
+                `<br> لبنة قليل الدسم: ${(results.meat * 40 / numfood).toFixed(1)} جرام ` +
+                `<br> لبنة قليل الدسم: ${(results.meat * 3 / numfood).toFixed(1)} ملعقة طعام ` +
+            
+                `<br> بيض: ${(results.meat * 1 / numfood).toFixed(1)} حبة ` +
+            
+                `<br> بياض بيضتين: ${(results.meat * 1 / numfood).toFixed(1)} واحد `;
+            
+
+                const fats = document.getElementById("fats");
+                fats.innerHTML = "حصص الدهون:" +
+                    `<br> زيت زيتون: ${(results.fats * 5 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> زيت عباد شمس: ${(results.fats * 5 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> زبدة أو سمنة: ${(results.fats * 5 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> سمسم: ${(results.fats * 10 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 2 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> طحينة السمسم: ${(results.fats * 10 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 2 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> زيتون: ${(results.fats * 35 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 8 / numfood).toFixed(1)} حبة` +
+                
+                    `<br><br> مكسرات (لوز أو كاجو): ${(results.fats * 8 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 6 / numfood).toFixed(1)} حبة` +
+                
+                    `<br><br> فول سوداني: ${(results.fats * 7 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 10 / numfood).toFixed(1)} حبة` +
+                
+                    `<br><br> زبدة الفول السوداني: ${(results.fats * 5 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> مايونيز لايت: ${(results.fats * 5 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> قشطة: ${(results.fats * 5 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 1 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> تتبيلة السلطة: ${(results.fats * 10 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 2 / numfood).toFixed(1)} ملعقة صغيرة` +
+                
+                    `<br><br> زيت جوز هند: ${(results.fats * 10 / numfood).toFixed(1)} جرام` +
+                    `<br> ${(results.fats * 2 / numfood).toFixed(1)} ملعقة صغيرة`;
+                
+
+
 
 
 });

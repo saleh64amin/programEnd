@@ -1,133 +1,307 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>حاسبة احتياجك الغذائي</title>
 
     <link rel="stylesheet" href="style.css" />
-
-    <script src="https://cdn.jsdelivr.net/gh/memonigal/pdfmake-arabic-fonts@0.1.0/build/pdfmake.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/memonigal/pdfmake-arabic-fonts@0.1.0/build/vfs_fonts.js"></script>
-    <!-- مكتبات Bootstrap و Popper -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    <script>
+        pdfMake.fonts = {
+            Cairo: {
+                normal: 'Cairo-Regular.ttf',
+                bold: 'Cairo-Bold.ttf',
+                italics: 'Cairo-Regular.ttf',
+                bolditalics: 'Cairo-Bold.ttf'
+            }
+        };
+    </script>
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
 </head>
 <body>
-
-
-  <h1>حاسبة احتياجك الغذائي</h1>
+    <h1>حاسبة احتياجك الغذائي</h1>
 
     <div class="container">
         <form id="calorie-form">
-          <div class="form-group">
-            <label for="weight">الوزن (كجم):</label>
-            <input type="number" id="weight" placeholder="أدخل وزنك" required>
-          </div>
-          <div class="form-group">
-            <label for="height">الطول (سم):</label>
-            <input type="number" id="height" placeholder="أدخل طولك" required>
-          </div>
-          <div class="form-group">
-            <label for="age">العمر (سنة):</label>
-            <input type="number" id="age" placeholder="أدخل عمرك" required>
-          </div>
-          <div class="form-group">
-            <label for="gender">الجنس:</label>
-            <select id="gender" required>
-              <option value="male">ذكر</option>
-              <option value="female">أنثى</option>
-              <option value="brgnet1">حامل في ثلث الاول</option>
-              <option value="brgnet2">حامل في ثلث الثاني</option>
-              <option value="brgnet3">حامل في ثلث الثالث</option>
-              <option value="bebe1-3">1-3رضيع  </option>
-              <option value="bebe4-5"> رضيع 4-5</option>
-              <option value="bebe6-8">6-8 رضيع</option>
-              <option value="bebe6-8!">6-8 رضيع نشيط</option>
-              <option value="bebe9-18">9-18 رضيع</option>
-              <option value="bebe9-18!">9-18 رضيع نشيط</option>
+            <div class="form-group">
+                <label for="weight">الوزن (كجم):</label>
+                <input type="text" id="name" placeholder="أدخل الاسم" required>
 
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="activity-level">مستوى النشاط:</label>
-            <select id="activity-level" required>
-              <option value="1">اطفال اقل من18 </option>
+                <input type="number" id="weight" placeholder="أدخل وزنك" required>
+                <input type="number" id="pn" placeholder=" سعرات التي تنقصها او تزيدها مع علامة" required>
 
-              <option value="1.2">قليل النشاط</option>
-              <option value="1.375">نشاط خفيف</option>
-              <option value="1.55">نشاط متوسط</option>
-              <option value="1.725">نشاط عالي</option>
-              <option value="1.9">نشاط مكثف</option>
-            </select>
-
-
+            </div>
+            <div class="form-group">
+                <label for="height">الطول (سم):</label>
+                <input type="number" id="height" placeholder="أدخل طولك" required>
+            </div>
+            <div class="form-group">
+                <label for="age">العمر (سنة):</label>
+                <input type="number" id="age" placeholder="أدخل عمرك" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">الجنس:</label>
+                <select id="gender" required>
+                    <option value="male">ذكر</option>
+                    <option value="female">أنثى</option>
+                    <option value="brgnet1">حامل في الثلث الأول</option>
+                    <option value="brgnet2">حامل في الثلث الثاني</option>
+                    <option value="brgnet3">حامل في الثلث الثالث</option>
+                    <option value="bebe1-3">1-3 رضيع</option>
+                    <option value="bebe4-5">رضيع 4-5</option>
+                    <option value="bebe6-8">6-8 رضيع</option>
+                    <option value="bebe6-8!">6-8 رضيع نشيط</option>
+                    <option value="bebe9-18">9-18 رضيع</option>
+                    <option value="bebe9-18!">9-18 رضيع نشيط</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="activity-level">مستوى النشاط:</label>
+                <select id="activity-level" required>
+                    <option value="1">أطفال أقل من 18</option>
+                    <option value="1.2">قليل النشاط</option>
+                    <option value="1.375">نشاط خفيف</option>
+                    <option value="1.55">نشاط متوسط</option>
+                    <option value="1.725">نشاط عالي</option>
+                    <option value="1.9">نشاط مكثف</option>
+                </select>
+            </div>
             <main>
-              <input type="number" id="protein-input" step="0.01" placeholder="نسبة البروتين (مثلاً: 0.30)" required>
-    <input type="number" id="fat-input" step="0.01" placeholder="نسبة الدهون (مثلاً: 0.25)" required>
-        <!-- <input type="number" id="carbs-input" step="0.1" placeholder="نسبة الكربوهيدرات (مثلاً: 0.45)" required> -->
-
+                <input type="number" id="protein-input" step="0.01" placeholder="نسبة البروتين (مثلاً: 0.30)" required>
+                <input type="number" id="fat-input" step="0.01" placeholder="نسبة الدهون (مثلاً: 0.25)" required>
             </main>
-
             <section>
-              <input type="number" id="dairy-servings" placeholder="عدد حصص الألبان" required>
-    <input type="number" id="vegetable-servings" placeholder="عدد حصص الخضار" required>
-    <!-- <input type="number" id="bread-servings" placeholder="عدد حصص الخبز" required> -->
-    <input type="number" id="fruit-servings" placeholder="عدد حصص الفاكهة" required>
-    <input type="number" id="numfood" placeholder="عدد الوجبات التي تقسم عليها مثل0.5" required>
-
+                <input type="number" id="dairy-servings" placeholder="عدد حصص الألبان" required>
+                <input type="number" id="vegetable-servings" placeholder="عدد حصص الخضار" required>
+                <input type="number" id="fruit-servings" placeholder="عدد حصص الفاكهة" required>
+                <input type="number" id="numfood" placeholder="عدد الوجبات التي تقسم عليها مثل 0.5" required>
             </section>
-          </div>
-
-
-
-          <button id="printButton">طباعة PDF</button>
-
-
-          <button type="submit" class="calculate-btn">احسب احتياجك</button>
+            <button type="submit" class="calculate-btn">احسب احتياجك</button>
         </form>
         <div>
             <p id="ss"></p>
         </div>
         <div id="results">
-          <h2>نتائجك:</h2>
+            <h2>نتائجك:</h2>
+            <p id="calories-result"></p>
+            <p id="macros-result"></p>
+            <p id="bdel"></p>
+              <h1 id="ideal-weight"></h1>
+            <h1 id="bmi"></h1>
+            <h1 id="power"></h1>
+             <h1 id="meal3"> </h1>
+             <h1 id="pnn"> </h1>
+             <h1 id="fatandproteinInput"> </h1>
+            <h1 id="dairy"></h1>
+            <h1 id="fruits"></h1>
+            <h1 id="vegetables"></h1>
+            <h1 id="bread"></h1>
+            <h1 id="meat"></h1>
+            <h1 id="fats"></h1>
           
-          <p id="calories-result"></p>
-          <p id="macros-result"></p>
-
-          <p id="bdel"></p>
-
-
-
-
-<h1 id="dairy"></h1>
-<h1 id="fruits"></h1>
-<h1 id="vegetables"></h1>
-<h1 id="bread"></h1>
-
-<h1 id="meat"></h1>
-<h1 id="fats"></h1>
-
-
-         
         </div>
-       
 
+    </div>
 
+    <div>
+        <button id="generatePdf">إنشاء PDF</button>
 
+        <script>
+            async function loadFonts() {
+                try {
+                    const regularFont = await fetch('Cairo-Bold.ttf').then(response => response.arrayBuffer());
+                    const boldFont = await fetch('Cairo-Bold.ttf').then(response => response.arrayBuffer());
 
+                    pdfMake.vfs = {
+                        'Cairo-Regular.ttf': arrayBufferToBase64(regularFont),
+                        'Cairo-Bold.ttf': arrayBufferToBase64(boldFont)
+                    };
+                } catch (error) {
+                    console.error('Error loading fonts:', error);
+                }
+            }
 
-      </div>
+            function arrayBufferToBase64(buffer) {
+                let binary = '';
+                const bytes = new Uint8Array(buffer);
+                const len = bytes.byteLength;
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return btoa(binary);
+            }
 
+            document.getElementById('generatePdf').addEventListener('click', async function() {
+                await loadFonts();
+                
+                const name = document.getElementById('name')?.value || '';
+                const age = document.getElementById('age')?.value || '';
+                const weight = document.getElementById('weight')?.value || '';
+                const height = document.getElementById('height')?.value || '';
+                const calories = document.getElementById('calories-result')?.textContent || '';
+                const macros = document.getElementById('macros-result')?.textContent || '';
 
+                // قيم إضافية لعرضها بالعربية عموديًا في الـ PDF
+                const idealWeight        = document.getElementById('ideal-weight')?.textContent.trim() || 'غير محدد';
+                const bmi               = document.getElementById('bmi')?.textContent.trim() || 'غير محدد';
+                const power             = document.getElementById('power')?.textContent.trim() || 'غير محدد';
+                const meal3             = document.getElementById('meal3')?.textContent.trim() || 'غير محدد';
+                const pnn               = document.getElementById('pnn')?.textContent.trim() || 'غير محدد';
+                const fatandproteinInput= document.getElementById('fatandproteinInput')?.textContent.trim() || 'غير محدد';
 
+                const dairy = document.getElementById('dairy').innerHTML.split('<br>').map(item => item.trim()).filter(Boolean);
+                const vegetables = document.getElementById('vegetables').innerHTML.split('<br>').map(item => item.trim()).filter(Boolean);
+                const fruits = document.getElementById('fruits').innerHTML.split('<br>').map(item => item.trim()).filter(Boolean);
+                const bread = document.getElementById('bread').innerHTML.split('<br>').map(item => item.trim()).filter(Boolean);
+                const meat = document.getElementById('meat').innerHTML.split('<br>').map(item => item.trim()).filter(Boolean);
+                const fats = document.getElementById('fats').innerHTML.split('<br>').map(item => item.trim()).filter(Boolean);
+const docDefinition = {
+    content: [
+        { text: "  العميل بيانات ", style: 'header', alignment: 'center' },
+        { text: [{ text: name.split(' ').reverse().join(' '), color: '#2C3E50' }, " :الاسم"], style: 'item', alignment: 'center' },
+        { text: [{ text: "سنة", color: '#2C3E50' }, " ", { text: age, color: '#2C3E50' }, " :العمر"], style: 'item', alignment: 'center' },
+        { text: [{ text: "كجم", color: '#2C3E50' }, " ", { text: weight, color: '#2C3E50' }, " :الوزن"], style: 'item', alignment: 'center' },
+        { text: [{ text: "سم", color: '#2C3E50' }, " ", { text: height, color: '#2C3E50' }, " :الطول"], style: 'item', alignment: 'center' },
+        { text: ["Total Calories:", { text: calories.replace("احتياجك اليومي: ", "").replace(" سعر حراري", ""), color: '#2C3E50' }], style: 'item', alignment: 'center' },
+        { text: [
+            "PTN:", " g ", { text: macros.replace("البروتين: ", "").split("جم")[0], color: '#2C3E50' },
+            "\n",
+            "FAT:", " g ", { text: macros.split("الدهون: ")[1].split("جم")[0], color: '#2C3E50' },
+            "\n", 
+            "CHO:", " g ", { text: macros.split("الكربوهيدرات: ")[1].split("جم")[0], color: '#2C3E50' }
+        ], style: 'item', alignment: 'center' },
+        { text: idealWeight, style: 'item', alignment: 'center' },
+        { text: bmi, style: 'item', alignment: 'center' },
+        { text: power, style: 'item', alignment: 'center' },
+        { text: meal3, style: 'item', alignment: 'center' },
+        { text: pnn, style: 'item', alignment: 'center' },
+        { text: fatandproteinInput, style: 'item', alignment: 'center' },
+        { text: "", pageBreak: "after" },
+        { text: "الغذائية احتياجاتك قائمة", style: 'header' },
+        {
+            text: 'الالبان كمية',
+            style: 'categoryHeader',
+            fillColor: '#A29BFE',
+            margin: [0, 10, 0, 5],
+            padding: [10, 5],
+            borderRadius: 5
+        },
+        {
+            table: {
+                widths: ['*'],
+                body: [
+                    [{ stack: dairy.map(item => ({ text: item.split(' ').reverse().join(' ').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]), margin: [0, 2], alignment: 'center' })), fillColor: '#A29BFE' }]
+                ]
+            },
+            layout: 'noBorders'
+        },
+        {
+            text: ' الخضار كمية',
+            style: 'categoryHeader',
+            fillColor: '#55EFC4',
+            margin: [0, 15, 0, 5],
+            padding: [10, 5],
+            borderRadius: 5
+        },
+        {
+            table: {
+                widths: ['*'],
+                body: [
+                    [{ stack: vegetables.map(item => ({ text: item.split(' ').reverse().join(' ').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]), margin: [0, 2], alignment: 'center' })), fillColor: '#55EFC4' }]
+                ]
+            },
+            layout: 'noBorders'
+        },
+        {
+            text: 'الفاكهة كمية ',
+            style: 'categoryHeader',
+            fillColor: '#FF7675',
+            margin: [0, 15, 0, 5],
+            padding: [10, 5],
+            borderRadius: 5
+        },
+        {
+            table: {
+                widths: ['*'],
+                body: [
+                    [{ stack: fruits.map(item => ({ text: item.split(' ').reverse().join(' ').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]), margin: [0, 2], alignment: 'center' })), fillColor: '#FF7675' }]
+                ]
+            },
+            layout: 'noBorders'
+        },
+        {
+            text: 'الخبز كمية ',
+            style: 'categoryHeader',
+            fillColor: '#FDCB6E',
+            margin: [0, 15, 0, 5],
+            padding: [10, 5],
+            borderRadius: 5
+        },
+        {
+            table: {
+                widths: ['*'],
+                body: [
+                    [{ stack: bread.map(item => ({ text: item.split(' ').reverse().join(' ').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]), margin: [0, 2], alignment: 'center' })), fillColor: '#FDCB6E' }]
+                ]
+            },
+            layout: 'noBorders'
+        },
+        {
+            text: 'اللحوم كمية ',
+            style: 'categoryHeader',
+            fillColor: '#74B9FF',
+            margin: [0, 15, 0, 5],
+            padding: [10, 5],
+            borderRadius: 5
+        },
+        {
+            table: {
+                widths: ['*'],
+                body: [
+                    [{ stack: meat.map(item => ({ text: item.split(' ').reverse().join(' ').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]), margin: [0, 2], alignment: 'center' })), fillColor: '#74B9FF' }]
+                ]
+            },
+            layout: 'noBorders'
+        },
+        {
+            text: 'الدهون كمية ',
+            style: 'categoryHeader',
+            fillColor: '#FFEAA7',
+            margin: [0, 15, 0, 5],
+            padding: [10, 5],
+            borderRadius: 5
+        },
+        {
+            table: {
+                widths: ['*'],
+                body: [
+                    [{ stack: fats.map(item => ({ text: item.split(' ').reverse().join(' ').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]), margin: [0, 2], alignment: 'center' })), fillColor: '#FFEAA7' }]
+                ]
+            },
+            layout: 'noBorders'
+        }
+    ],
+    styles: {
+        header: { fontSize: 22, bold: true, alignment: 'center', margin: [0, 0, 0, 20], color: '#6C5CE7' },
+        categoryHeader: { fontSize: 18, bold: true, color: '#2C3E50', alignment: 'center', margin: [0, 10, 0, 5] },
+        item: { fontSize: 14, margin: [0, 2], color: '#2C3E50' },
+        table: { margin: [0, 5, 0, 15] }
+    },
+    direction: 'rtl',
+    defaultStyle: { font: 'Cairo' },
+    pageSize: 'A4',
+    pageMargins: [ 40, 60, 40, 60 ],
+    background: function() { return { canvas: [ { type: 'rect', x: 0, y: 0, w: 595.28, h: 841.89, color: '#F0F7FF' } ] } }
+};
+                pdfMake.createPdf(docDefinition).download('قائمة_الاحتياجات_الغذائية.pdf');
+            });
+        </script>
+    </div>
 
-
-
-
-
-
-   <!-- ملف الجافاسكربت الخاص بك (main.js) -->
-   <script src="main.js" defer></script>
-  </body>
+    <script src="main.js" defer></script>
+</body>
 </html>
